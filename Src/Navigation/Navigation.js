@@ -1,31 +1,33 @@
-import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import DashboardScreen from '../Screens/DashboardScreen';
-import Colors from '../Themes/Colors';
-import CategoryScreen from '../Screens/CategoryScreen';
-import NewTaskScreen from '../Screens/NewTaskScreen';
-import PriorityLevelScreen from '../Screens/PriorityLevelScreen';
-import TaskGroupScreen from '../Screens/TaskGroupScreen';
-import AllTaskScreen from '../Screens/AllTaskScreen';
-import DateDueScreen from '../Screens/DateDueScreen';
-import {Image, View, StyleSheet, TouchableOpacity} from 'react-native';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import DashboardScreen from "../Screens/DashboardScreen";
+import Colors from "../Themes/Colors";
+import CategoryScreen from "../Screens/CategoryScreen";
+import NewTaskScreen from "../Screens/NewTaskScreen";
+import PriorityLevelScreen from "../Screens/PriorityLevelScreen";
+import TaskGroupScreen from "../Screens/TaskGroupScreen";
+import AllTaskScreen from "../Screens/AllTaskScreen";
+import DateDueScreen from "../Screens/DateDueScreen";
+import { Image, View, StyleSheet, TouchableOpacity } from "react-native";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import CompletedScreen from "../Screens/CompletedScreen.js";
 const Stack = createNativeStackNavigator();
 
 let data = {
   headerBackVisible: false,
-  headerTitleAlign: 'center',
+  headerTitleAlign: "center",
 };
 
-const HeaderLeft = ({navigation}) => {
+const HeaderLeft = ({ navigation }) => {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('DashboardScreen')}
+      onPress={() => navigation.navigate("DashboardScreen")}
       style={{
         paddingRight: hp(2),
-      }}>
-      <Image style={styles.homeIcon} source={require('../Images/home.png')} />
+      }}
+    >
+      <Image style={styles.homeIcon} source={require("../Images/home.png")} />
     </TouchableOpacity>
   );
 };
@@ -34,15 +36,15 @@ export default function Navigation() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          options={({navigation}) => ({
-            title: 'Home',
+          options={({ navigation }) => ({
+            title: "Home",
           })}
           name="DashboardScreen"
           component={DashboardScreen}
         />
         <Stack.Screen
-          options={({navigation}) => ({
-            title: 'Date Due',
+          options={({ navigation }) => ({
+            title: "Date Due",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -50,8 +52,8 @@ export default function Navigation() {
           component={DateDueScreen}
         />
         <Stack.Screen
-          options={({navigation}) => ({
-            title: 'Category',
+          options={({ navigation }) => ({
+            title: "Category",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -59,8 +61,8 @@ export default function Navigation() {
           component={CategoryScreen}
         />
         <Stack.Screen
-          options={({navigation}) => ({
-            title: 'New Task',
+          options={({ navigation }) => ({
+            title: "New Task",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -68,8 +70,8 @@ export default function Navigation() {
           component={NewTaskScreen}
         />
         <Stack.Screen
-          options={({navigation}) => ({
-            title: 'Priority',
+          options={({ navigation }) => ({
+            title: "Priority",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -77,8 +79,8 @@ export default function Navigation() {
           component={PriorityLevelScreen}
         />
         <Stack.Screen
-          options={({navigation}) => ({
-            title: 'Task Group',
+          options={({ navigation }) => ({
+            title: "Task Group",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -86,13 +88,22 @@ export default function Navigation() {
           component={TaskGroupScreen}
         />
         <Stack.Screen
-          options={({navigation}) => ({
-            title: 'All Task',
+          options={({ navigation }) => ({
+            title: "All Task",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
           name="AllTaskScreen"
           component={AllTaskScreen}
+        />
+        <Stack.Screen
+          options={({ navigation }) => ({
+            title: "Completed Task",
+            ...data,
+            headerLeft: () => <HeaderLeft navigation={navigation} />,
+          })}
+          name="CompletedScreen"
+          component={CompletedScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -100,5 +111,9 @@ export default function Navigation() {
 }
 
 const styles = StyleSheet.create({
-  homeIcon: {height: 35, width: 35, resizeMode: 'contain'},
+  homeIcon: {
+    height: 35,
+    width: 35,
+    resizeMode: "contain",
+  },
 });
