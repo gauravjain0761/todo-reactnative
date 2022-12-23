@@ -1,11 +1,26 @@
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ApplicationStyles from "../../Themes/ApplicationStyles";
 import { styles } from "./styles";
 import { useNavigation } from "@react-navigation/native";
+import { dummyData } from "../../Config/Constatnts";
 
 export default function CompletedScreen() {
+  const [dummyDataSet, setdummyDataSet] = useState(dummyData);
+  const [allCheck, setallCheck] = useState(false);
   const navigation = useNavigation();
+
+  const updateData = (index) => {
+    let data = Object.assign([], dummyDataSet);
+    data[index].isChecked = !data[index].isChecked;
+    setdummyDataSet(data);
+  };
+
+  useEffect(() => {
+    let data = Object.assign([], dummyDataSet);
+    data.forEach((item) => (item.isChecked = allCheck));
+    setdummyDataSet(data);
+  }, [allCheck]);
   return (
     <View style={ApplicationStyles.applicationView}>
       <View style={styles.mainView}>
@@ -13,27 +28,38 @@ export default function CompletedScreen() {
           <View style={styles.leftView}>
             <Text style={styles.title}>TASK</Text>
           </View>
-          <View style={styles.rightView}>
+          <TouchableOpacity
+            onPress={() => setallCheck(!allCheck)}
+            style={styles.rightView}
+          >
             <Image
               style={styles.checkBox}
-              source={require("../../Images/checkbox.png")}
+              source={
+                allCheck == true
+                  ? require("../../Images/checkbox.png")
+                  : require("../../Images/unchecked.png")
+              }
             />
-          </View>
+          </TouchableOpacity>
         </View>
         <FlatList
-          data={[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 2, 2.4, 4, 35, 3, 5, 5, 45, 4,
-            545, 4, 54, 5, 3,
-          ]}
+          data={dummyDataSet}
           renderItem={({ item, index }) => (
             <View key={index} style={styles.row}>
               <View style={styles.leftView}>
-                <Text style={styles.taskText}>Sample Task</Text>
+                <Text style={styles.taskText}>{item.task}</Text>
               </View>
-              <TouchableOpacity style={styles.rightView}>
+              <TouchableOpacity
+                onPress={() => updateData(index)}
+                style={styles.rightView}
+              >
                 <Image
                   style={styles.checkBox}
-                  source={require("../../Images/checkbox.png")}
+                  source={
+                    item.isChecked == true
+                      ? require("../../Images/checkbox.png")
+                      : require("../../Images/unchecked.png")
+                  }
                 />
               </TouchableOpacity>
             </View>
@@ -53,7 +79,7 @@ export default function CompletedScreen() {
           onPress={() => navigation.goBack()}
           style={styles.completedButton}
         >
-          <Text style={styles.completedText}>All Task</Text>
+          {/* <Text style={styles.completedText}>All Task</Text> */}
         </TouchableOpacity>
         <TouchableOpacity style={ApplicationStyles.arrowButton}>
           <Image

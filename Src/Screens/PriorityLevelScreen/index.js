@@ -4,6 +4,8 @@ import ApplicationStyles from "../../Themes/ApplicationStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { styles } from "./styles";
 import Footer from "../../Components/Footer";
+import { dummyData } from "../../Config/Constatnts";
+import Colors from "../../Themes/Colors";
 
 export default function PriorityLevelScreen() {
   let data = [
@@ -36,23 +38,31 @@ export default function PriorityLevelScreen() {
           </View>
         </View>
         <FlatList
-          data={data}
+          data={dummyData}
           renderItem={({ item, index }) => {
             let color = "white";
-            if (item == "Urgent") color = "#f28a8a";
-            else if (item == "High") color = "#f2a774";
-            else if (item == "Medium") color = "#f2e374";
-            else if (item == "Low") color = "#74f274";
-            else if (item == "Very Low") color = "#7485f2";
-            else if (item == "No") color = "white";
+            if (item.priority == "Urgent") color = "#ba2d32";
+            else if (item.priority == "High") color = "#d65f33";
+            else if (item.priority == "Medium") color = "#d6cb33";
+            else if (item.priority == "Low") color = "#308723";
+            else if (item.priority == "Very Low") color = "#232b87";
+            else if (item.priority == "No Priority") color = "white";
             return (
               <View key={index} style={styles.row}>
                 <View style={styles.leftView}>
-                  <Text style={styles.taskText}>Sample Task</Text>
+                  <Text style={styles.taskText}>{item.task}</Text>
                 </View>
                 <View style={styles.rightView}>
-                  <Text style={[styles.dateText, { backgroundColor: color }]}>
-                    {item}
+                  <Text
+                    style={[
+                      styles.dateText,
+                      {
+                        backgroundColor: color,
+                        color: color == "white" ? Colors.black : Colors.white,
+                      },
+                    ]}
+                  >
+                    {item.priority}
                   </Text>
                 </View>
               </View>

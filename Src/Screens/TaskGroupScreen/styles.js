@@ -23,15 +23,15 @@ export const styles = StyleSheet.create({
     paddingVertical: hp(1.5),
   },
   gropuName: {
-    ...commonFontStyles("bold", 20, Colors.black),
+    ...commonFontStyles("bold", 20, Colors.blue),
     textAlign: "center",
     marginVertical: hp(1.5),
   },
   title: {
-    ...commonFontStyles("bold", 18, Colors.black),
+    ...commonFontStyles("bold", 18, Colors.blue),
   },
   taskText: {
-    ...commonFontStyles("400", 14, Colors.black),
+    ...commonFontStyles("400", 14, Colors.blue),
   },
   dateText: {
     ...commonFontStyles("400", 14, Colors.placeholderColor),

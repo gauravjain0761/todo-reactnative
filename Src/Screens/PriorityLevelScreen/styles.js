@@ -23,14 +23,14 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    ...commonFontStyles("bold", 18, Colors.black),
+    ...commonFontStyles("bold", 18, Colors.blue),
   },
   taskText: {
     paddingVertical: hp(1.5),
-    ...commonFontStyles("400", 14, Colors.black),
+    ...commonFontStyles("400", 14, Colors.blue),
   },
   dateText: {
-    ...commonFontStyles("500", 12, Colors.black),
+    ...commonFontStyles("500", 12, Colors.white),
     paddingVertical: 5,
     // paddingVertical: hp(1.5),
     width: hp(9),

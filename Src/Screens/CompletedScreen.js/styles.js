@@ -22,10 +22,10 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    ...commonFontStyles("bold", 18, Colors.black),
+    ...commonFontStyles("bold", 18, Colors.blue),
   },
   taskText: {
-    ...commonFontStyles("400", 14, Colors.black),
+    ...commonFontStyles("400", 14, Colors.blue),
   },
   dateText: {
     ...commonFontStyles("400", 14, Colors.placeholderColor),
@@ -34,12 +34,15 @@ export const styles = StyleSheet.create({
     height: 25,
     width: 25,
     resizeMode: "contain",
+    tintColor: Colors.blue,
   },
   completedButton: {
     backgroundColor: Colors.black,
     borderRadius: 50,
-    paddingVertical: 5,
-    paddingHorizontal: hp(3),
+    // paddingVertical: 5,
+    // paddingHorizontal: hp(3),
+    height: 40,
+    width: 40,
   },
   completedText: { ...commonFontStyles("500", 18, Colors.white) },
 });

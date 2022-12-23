@@ -87,7 +87,7 @@ export default function DashboardScreen() {
         >
           <View>
             <LinearGradient
-              colors={["#192f6a", "#4c6690", "#4c6690"]}
+              colors={["#192f6a", "#4c669f"]}
               style={styles.linearGradient}
             ></LinearGradient>
           </View>

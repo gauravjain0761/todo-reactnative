@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     padding: hp(2),
   },
   viewText: {
-    ...commonFontStyles("bold", 18, Colors.black),
+    ...commonFontStyles("bold", 18, Colors.blue),
     marginBottom: hp(2),
   },
   linearGradient: {
@@ -41,6 +41,6 @@ export const styles = StyleSheet.create({
     marginRight: hp(1.5),
   },
   rowText: {
-    ...commonFontStyles("400", 18, Colors.black),
+    ...commonFontStyles("400", 18, Colors.blue),
   },
 });

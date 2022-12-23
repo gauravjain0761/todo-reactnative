@@ -3,6 +3,7 @@ import React from "react";
 import ApplicationStyles from "../../Themes/ApplicationStyles";
 import { styles } from "./styles";
 import Footer from "../../Components/Footer";
+import { dummyData } from "../../Config/Constatnts";
 
 export default function CategoryScreen() {
   return (
@@ -17,17 +18,14 @@ export default function CategoryScreen() {
           </View>
         </View>
         <FlatList
-          data={[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 2, 2.4, 4, 35, 3, 5, 5, 45, 4,
-            545, 4, 54, 5, 3,
-          ]}
+          data={dummyData}
           renderItem={({ item, index }) => (
             <View key={index} style={styles.row}>
               <View style={styles.leftView}>
-                <Text style={styles.taskText}>Sample Task</Text>
+                <Text style={styles.taskText}>{item.task}</Text>
               </View>
               <View style={styles.rightView}>
-                <Text style={styles.dateText}>Category</Text>
+                <Text style={styles.dateText}>{item.category}</Text>
               </View>
             </View>
           )}

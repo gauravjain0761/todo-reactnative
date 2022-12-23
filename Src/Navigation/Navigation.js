@@ -12,11 +12,22 @@ import DateDueScreen from "../Screens/DateDueScreen";
 import { Image, View, StyleSheet, TouchableOpacity } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import CompletedScreen from "../Screens/CompletedScreen.js";
+import { commonFontStyles } from "../Themes/Fonts";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItem,
+} from "@react-navigation/drawer";
+import AboutUsScreen from "../Screens/AboutUsScreen";
+import TermsScreen from "../Screens/TermsScreen/index";
+import PrivacyScreen from "../Screens/PrivacyScreen";
+
 const Stack = createNativeStackNavigator();
 
 let data = {
   headerBackVisible: false,
   headerTitleAlign: "center",
+  headerTitleStyle: { ...commonFontStyles("500", 22, Colors.blue) },
 };
 
 const HeaderLeft = ({ navigation }) => {
@@ -31,20 +42,99 @@ const HeaderLeft = ({ navigation }) => {
     </TouchableOpacity>
   );
 };
+
+const Drawer = createDrawerNavigator();
+export function DashboardDrawer({ navigation }) {
+  return (
+    <Drawer.Navigator
+      screenOptions={({ navigation }) => ({
+        drawerPosition: "right",
+      })}
+    >
+      <Drawer.Screen
+        options={({ navigation }) => ({
+          headerTitle: "",
+          headerLeft: "",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.openDrawer()}
+              style={{
+                paddingHorizontal: hp(2),
+              }}
+            >
+              <Image
+                style={styles.homeIcon}
+                source={require("../Images/menu.png")}
+              />
+            </TouchableOpacity>
+          ),
+          title: "DASHBOARD",
+        })}
+        name={"DashboardScreen"}
+        component={DashboardScreen}
+      />
+      <Drawer.Screen
+        options={({ navigation }) => ({
+          headerTitle: "ABOUT US",
+          ...data,
+          headerLeft: () => (
+            <View style={{ paddingLeft: hp(2) }}>
+              <HeaderLeft navigation={navigation} />
+            </View>
+          ),
+          title: "ABOUT US",
+        })}
+        name={"AboutUsScreen"}
+        component={AboutUsScreen}
+      />
+      <Drawer.Screen
+        options={({ navigation }) => ({
+          headerTitle: "PRIVACY POLICY",
+          ...data,
+          headerLeft: () => (
+            <View style={{ paddingLeft: hp(2) }}>
+              <HeaderLeft navigation={navigation} />
+            </View>
+          ),
+          title: "PRIVACY POLICY",
+        })}
+        name={"PrivacyScreen"}
+        component={PrivacyScreen}
+      />
+      <Drawer.Screen
+        options={({ navigation }) => ({
+          headerTitle: "TERMS & CONDITION",
+          ...data,
+          headerLeft: () => (
+            <View style={{ paddingLeft: hp(2) }}>
+              <HeaderLeft navigation={navigation} />
+            </View>
+          ),
+          title: "TERMS & CONDITION",
+        })}
+        name={"TermsScreen"}
+        component={TermsScreen}
+      />
+    </Drawer.Navigator>
+  );
+}
+
 export default function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           options={({ navigation }) => ({
-            title: "Home",
+            title: "",
+            headerShown: false,
           })}
-          name="DashboardScreen"
-          component={DashboardScreen}
+          name="DashboardDrawer"
+          component={DashboardDrawer}
         />
         <Stack.Screen
           options={({ navigation }) => ({
-            title: "Date Due",
+            title: "CHRONOLOGICAL",
+
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -53,7 +143,7 @@ export default function Navigation() {
         />
         <Stack.Screen
           options={({ navigation }) => ({
-            title: "Category",
+            title: "CATEGORY",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -62,7 +152,7 @@ export default function Navigation() {
         />
         <Stack.Screen
           options={({ navigation }) => ({
-            title: "New Task",
+            title: "",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -71,7 +161,7 @@ export default function Navigation() {
         />
         <Stack.Screen
           options={({ navigation }) => ({
-            title: "Priority",
+            title: "PRIORITY LEVEL",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -80,7 +170,7 @@ export default function Navigation() {
         />
         <Stack.Screen
           options={({ navigation }) => ({
-            title: "Task Group",
+            title: "TASK GROUPS",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -89,7 +179,7 @@ export default function Navigation() {
         />
         <Stack.Screen
           options={({ navigation }) => ({
-            title: "All Task",
+            title: "ALL TASKS",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
@@ -98,7 +188,7 @@ export default function Navigation() {
         />
         <Stack.Screen
           options={({ navigation }) => ({
-            title: "Completed Task",
+            title: "COMPLETED TASK",
             ...data,
             headerLeft: () => <HeaderLeft navigation={navigation} />,
           })}
