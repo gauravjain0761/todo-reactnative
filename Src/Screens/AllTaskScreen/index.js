@@ -4,23 +4,49 @@ import ApplicationStyles from "../../Themes/ApplicationStyles";
 import { styles } from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { dummyData } from "../../Config/Constatnts";
+import firestore from "@react-native-firebase/firestore";
 
 export default function AllTaskScreen() {
   const [dummyDataSet, setdummyDataSet] = useState(dummyData);
+  const [allData, setData] = useState([]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   const [allCheck, setallCheck] = useState(false);
   const navigation = useNavigation();
 
-  const updateData = (index) => {
-    let data = Object.assign([], dummyDataSet);
-    data[index].isChecked = !data[index].isChecked;
-    setdummyDataSet(data);
+  const updateData = (item, index) => {
+    firestore()
+      .collection("Users")
+      .doc(item.id)
+      .update({
+        isChecked: !item.data.isChecked,
+      })
+      .then(() => {
+        console.log("User updated!");
+      });
+
+    item.data.isChecked = !item.data.isChecked;
+    setData([...allData]);
   };
 
-  useEffect(() => {
-    let data = Object.assign([], dummyDataSet);
-    data.forEach((item) => (item.isChecked = allCheck));
-    setdummyDataSet(data);
-  }, [allCheck]);
+  const getData = async () => {
+    await firestore()
+      .collection("Users")
+      .onSnapshot((res) => {
+        let userData = [];
+        res?.forEach((doc) => {
+          const obj = {
+            data: doc.data(),
+            id: doc?.id,
+          };
+          userData.push(obj);
+        });
+        setData(userData);
+      });
+  };
 
   return (
     <View style={ApplicationStyles.applicationView}>
@@ -44,27 +70,29 @@ export default function AllTaskScreen() {
           </TouchableOpacity>
         </View>
         <FlatList
-          data={dummyDataSet}
-          renderItem={({ item, index }) => (
-            <View key={index} style={styles.row}>
-              <View style={styles.leftView}>
-                <Text style={styles.taskText}>{item.task}</Text>
+          data={allData}
+          renderItem={({ item, index }) => {
+            return (
+              <View key={index} style={styles.row}>
+                <View style={styles.leftView}>
+                  <Text style={styles.taskText}>{item.data.taskName}</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => updateData(item, index)}
+                  style={styles.rightView}
+                >
+                  <Image
+                    style={styles.checkBox}
+                    source={
+                      item.data.isChecked
+                        ? require("../../Images/checkbox.png")
+                        : require("../../Images/unchecked.png")
+                    }
+                  />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => updateData(index)}
-                style={styles.rightView}
-              >
-                <Image
-                  style={styles.checkBox}
-                  source={
-                    item.isChecked == true
-                      ? require("../../Images/checkbox.png")
-                      : require("../../Images/unchecked.png")
-                  }
-                />
-              </TouchableOpacity>
-            </View>
-          )}
+            );
+          }}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id}
         />

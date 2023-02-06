@@ -1,4 +1,12 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+  Alert,
+} from "react-native";
+import { isEmpty } from "lodash";
 import React, { useState } from "react";
 import ApplicationStyles from "../../Themes/ApplicationStyles";
 import { useDispatch } from "react-redux";
@@ -7,6 +15,9 @@ import { styles } from "./styles";
 import RegistrationDropdown from "../../Components/RegistrationDropdown";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
+import firestore from "@react-native-firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
+
 const citydata = [
   {
     id: 1,
@@ -18,6 +29,7 @@ const citydata = [
   { id: 10, strategicName: "DEMATADE" },
 ];
 export default function NewTaskScreen() {
+  const { goBack } = useNavigation();
   const [taskName, setTaskName] = useState("");
   const [duedate, setDuedate] = useState("");
   const [priority, setPriority] = useState("");
@@ -28,6 +40,56 @@ export default function NewTaskScreen() {
     setDuedate(date);
     setPicker(false);
   };
+
+  console.log("duedate", duedate);
+
+  const userCollection = firestore().collection("Users");
+  const [lastDocument, setLastDocument] = useState();
+
+  const onPressAdd = () => {
+    // let query = userCollection.orderBy("taskName"); // sort the data
+
+    // if (lastDocument !== undefined) {
+    //   query = query.startAfter(lastDocument); // fetch data following the last document accessed
+    // }
+
+    // query
+    //   .limit(3) // limit to your page size, 3 is just an example
+    //   .get()
+    //   .then((querySnapshot) => {
+    //     console.log("querySnapshot", querySnapshot.docs);
+    //     setLastDocument(querySnapshot.docs[querySnapshot.docs.length - 1]);
+    //     // MakeUserData(querySnapshot.docs);
+    //   });
+    // console.log("duedate", duedate);
+    if (isEmpty(taskName)) {
+      Alert.alert("Please enter the task name");
+    } else if (duedate == "") {
+      Alert.alert("Please enter the due date");
+    } else if (isEmpty(priority)) {
+      Alert.alert("Please enter the priority");
+    } else if (isEmpty(category)) {
+      Alert.alert("Please enter the category");
+    } else if (isEmpty(taskGroup)) {
+      Alert.alert("Please enter the task group");
+    } else {
+      firestore()
+        .collection("Users")
+        .add({
+          taskName: taskName,
+          dueDate: duedate,
+          priorityLevel: priority,
+          category: category,
+          taskGroup: taskGroup,
+        })
+        .then(() => {
+          Alert.alert("New List Added");
+          goBack();
+          console.log("User added!");
+        });
+    }
+  };
+
   return (
     <View style={ApplicationStyles.applicationView}>
       <View style={styles.mainView}>
@@ -92,6 +154,11 @@ export default function NewTaskScreen() {
           <Text style={styles.bottomName}>TASK GROUP</Text>
         </View>
       </View>
+
+      <TouchableOpacity onPress={onPressAdd} style={styles.buttonStyle}>
+        <Text style={styles.buttonTextStyle}> {"Add"}</Text>
+      </TouchableOpacity>
+      <SafeAreaView />
 
       <DateTimePickerModal
         isVisible={picker}

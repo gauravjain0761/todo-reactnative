@@ -6,6 +6,20 @@ import { commonFontStyles } from "../../Themes/Fonts";
 export const styles = StyleSheet.create({
   mainView: {
     padding: hp(1.5),
+    flex: 1,
+  },
+  buttonStyle: {
+    padding: hp(2),
+    backgroundColor: Colors.black,
+    margin: hp(2),
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonTextStyle: {
+    color: Colors.white,
+    fontSize: hp(2),
+    fontWeight: "bold",
   },
   textInput: {
     ...commonFontStyles("400", 16, Colors.blue),

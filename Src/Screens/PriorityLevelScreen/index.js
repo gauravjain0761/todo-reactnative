@@ -1,31 +1,48 @@
 import { View, Text, FlatList } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ApplicationStyles from "../../Themes/ApplicationStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { styles } from "./styles";
 import Footer from "../../Components/Footer";
 import { dummyData } from "../../Config/Constatnts";
 import Colors from "../../Themes/Colors";
+import firestore from "@react-native-firebase/firestore";
 
 export default function PriorityLevelScreen() {
-  let data = [
-    "Urgent",
-    "Urgent",
-    "Urgent",
-    "High",
-    "High",
-    "Medium",
-    "Medium",
-    "Low",
-    "Low",
-    "Low",
-    "Very Low",
-    "Very Low",
-    "Very Low",
-    "No",
-    "No",
-    "No",
-  ];
+  const [data, setData] = useState([]);
+
+  // let data = [
+  //   "Urgent",
+  //   "Urgent",
+  //   "Urgent",
+  //   "High",
+  //   "High",
+  //   "Medium",
+  //   "Medium",
+  //   "Low",
+  //   "Low",
+  //   "Low",
+  //   "Very Low",
+  //   "Very Low",
+  //   "Very Low",
+  //   "No",
+  //   "No",
+  //   "No",
+  // ];
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const users = await firestore()
+      .collection("Users")
+      .orderBy("priorityLevel")
+      .get();
+    console.log("users.docs", users.docs.length);
+    setData(users.docs);
+  };
+
   return (
     <View style={ApplicationStyles.applicationView}>
       <View style={styles.mainView}>
@@ -38,8 +55,9 @@ export default function PriorityLevelScreen() {
           </View>
         </View>
         <FlatList
-          data={dummyData}
+          data={data}
           renderItem={({ item, index }) => {
+            let data = item._data;
             let color = "white";
             if (item.priority == "Urgent") color = "#ba2d32";
             else if (item.priority == "High") color = "#d65f33";
@@ -50,7 +68,7 @@ export default function PriorityLevelScreen() {
             return (
               <View key={index} style={styles.row}>
                 <View style={styles.leftView}>
-                  <Text style={styles.taskText}>{item.task}</Text>
+                  <Text style={styles.taskText}>{data.taskName}</Text>
                 </View>
                 <View style={styles.rightView}>
                   <Text
@@ -62,7 +80,7 @@ export default function PriorityLevelScreen() {
                       },
                     ]}
                   >
-                    {item.priority}
+                    {data.priorityLevel}
                   </Text>
                 </View>
               </View>

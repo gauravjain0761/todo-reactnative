@@ -98,3 +98,9 @@ export const dummyData = [
     isChecked: false,
   },
 ];
+
+export const timeStampToDate = (seconds) => {
+  var timestamp = seconds;
+  var myDate = new Date(timestamp * 1000);
+  return myDate.toJSON();
+};
