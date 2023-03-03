@@ -27,7 +27,7 @@ export default function TaskGroupScreen() {
   return (
     <View style={ApplicationStyles.applicationView}>
       <View style={styles.mainView}>
-        <Text style={styles.gropuName}>TASK GROUP NAME</Text>
+        {/* <Text style={styles.gropuName}>TASK GROUP NAME</Text> */}
         <View
           style={[
             styles.row,

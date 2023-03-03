@@ -28,6 +28,29 @@ const citydata = [
   { id: 6, strategicName: "TESTING" },
   { id: 10, strategicName: "DEMATADE" },
 ];
+
+const priorityData = [
+  {
+    id: 1,
+    strategicName: "very low",
+  },
+  { id: 2, strategicName: "low" },
+  { id: 3, strategicName: "medium" },
+  { id: 6, strategicName: "high" },
+  { id: 10, strategicName: "urgent" },
+];
+
+const categoryData = [
+  {
+    id: 1,
+    strategicName: "financial",
+  },
+  { id: 2, strategicName: "personal" },
+  { id: 3, strategicName: "work" },
+  { id: 6, strategicName: "maintenance" },
+  { id: 10, strategicName: "general" },
+];
+
 export default function NewTaskScreen() {
   const { goBack } = useNavigation();
   const [taskName, setTaskName] = useState("");
@@ -119,7 +142,7 @@ export default function NewTaskScreen() {
         </View>
         <View>
           <RegistrationDropdown
-            data={citydata}
+            data={priorityData}
             value={priority}
             setData={(text) => {
               setPriority(text);
@@ -131,7 +154,7 @@ export default function NewTaskScreen() {
         </View>
         <View>
           <RegistrationDropdown
-            data={citydata}
+            data={categoryData}
             value={category}
             setData={(text) => {
               setCategory(text);
