@@ -21,6 +21,7 @@ import {
 import AboutUsScreen from "../Screens/AboutUsScreen";
 import TermsScreen from "../Screens/TermsScreen/index";
 import PrivacyScreen from "../Screens/PrivacyScreen";
+import AllTaskGroupListScreen from "../Screens/AllTaskGroupListScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -186,6 +187,30 @@ export default function Navigation() {
           name="AllTaskScreen"
           component={AllTaskScreen}
         />
+        <Stack.Screen
+          options={({ navigation }) => ({
+            title: "ALL TASKS",
+            ...data,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={{
+                    paddingRight: hp(2),
+                  }}
+                >
+                  <Image
+                    style={styles.homeIcon}
+                    source={require("../Images/home.png")}
+                  />
+                </TouchableOpacity>
+              );
+            },
+          })}
+          name="AllTaskGroupListScreen"
+          component={AllTaskGroupListScreen}
+        />
+
         <Stack.Screen
           options={({ navigation }) => ({
             title: "COMPLETED TASK",
