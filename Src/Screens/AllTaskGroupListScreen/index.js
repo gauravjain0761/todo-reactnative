@@ -45,7 +45,6 @@ export default function AllTaskGroupListScreen({ route }) {
             data: doc.data(),
             id: doc?.id,
           };
-          console.log(obj);
           if (obj.data.taskGroup == group) {
             userData.push(obj);
           }

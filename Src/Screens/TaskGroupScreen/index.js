@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import ApplicationStyles from "../../Themes/ApplicationStyles";
 import Colors from "../../Themes/Colors";
@@ -30,12 +30,10 @@ export default function TaskGroupScreen() {
       }
       return a;
     }, []);
-    console.log(uniqueArray);
     let temp = [];
     uniqueArray.forEach((item) => {
       temp.push({ group: item, items: [] });
     });
-    console.log("temp", temp);
 
     temp.forEach((item) => {
       users.docs.forEach((element) => {
@@ -44,8 +42,35 @@ export default function TaskGroupScreen() {
         }
       });
     });
-    console.log("temp", temp);
     setDataTaskGroup(temp);
+  };
+  const onDeleteTasks = async (item) => {
+    const users = await firestore()
+      .collection("Users")
+      .where("taskGroup", "==", item.group)
+      .get()
+      .then(function (querySnapshot) {
+        // Once we get the results, begin a batch
+        console.log(querySnapshot);
+        var batch = firestore().batch();
+
+        querySnapshot.forEach(function (doc) {
+          console.log(doc);
+          // For each doc, add a delete operation to the batch
+          batch.delete(doc.ref);
+        });
+
+        // Commit the batch
+        return batch.commit();
+      })
+      .then(function () {
+        // Delete completed!
+        // ...
+        console.log("completed");
+        getData();
+      });
+
+    console.log(users.docs);
   };
 
   return (
@@ -69,28 +94,44 @@ export default function TaskGroupScreen() {
           data={dataTaskGroup}
           renderItem={({ item, index }) => {
             return (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("AllTaskGroupListScreen", {
-                    group: item.group,
-                  })
-                }
-                key={index}
-                style={styles.row}
-              >
+              <View key={index} style={styles.row}>
                 <View style={styles.leftView}>
                   <Text style={styles.taskText}>{item.group}</Text>
                 </View>
                 <View style={styles.rightView}>
-                  <Text style={styles.dateText}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("AllTaskGroupListScreen", {
+                        group: item.group,
+                      });
+                    }}
+                    style={{ paddingHorizontal: 10 }}
+                  >
+                    <Image
+                      style={styles.icons}
+                      source={require("../../Images/eye.png")}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      onDeleteTasks(item);
+                    }}
+                    style={{ paddingHorizontal: 10 }}
+                  >
+                    <Image
+                      style={styles.icons}
+                      source={require("../../Images/trash.png")}
+                    />
+                  </TouchableOpacity>
+                  {/* <Text style={styles.dateText}>
                     {"View"}
-                    {/* {" "}
+                    {" "}
                     {moment(
                       timeStampToDate(item._data?.dueDate?.seconds)
-                    ).format("DD-MM-YYYY")} */}
-                  </Text>
+                    ).format("DD-MM-YYYY")}
+                  </Text> */}
                 </View>
-              </TouchableOpacity>
+              </View>
             );
           }}
           showsVerticalScrollIndicator={false}

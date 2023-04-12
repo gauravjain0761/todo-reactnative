@@ -4,9 +4,8 @@ const initialState = {
 };
 export default function (state = initialState, action) {
   switch (action.type) {
-    case 'PRE_LOADER': {
-      console.log(action.payload);
-      return {...state, preLoader: action.payload.preLoader};
+    case "PRE_LOADER": {
+      return { ...state, preLoader: action.payload.preLoader };
     }
     default:
       return state;

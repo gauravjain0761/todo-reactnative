@@ -39,7 +39,6 @@ export default function PriorityLevelScreen() {
       .collection("Users")
       .orderBy("priorityLevel")
       .get();
-    console.log("users.docs", users.docs.length);
     setData(users.docs);
   };
 

@@ -47,7 +47,6 @@ export default function DateDueScreen() {
       let postData = doc.data();
       postData.postId = doc.id;
       newData.push(postData);
-      console.log("newData", newData);
       setData(newData);
     });
   }
@@ -70,7 +69,6 @@ export default function DateDueScreen() {
       let postData = doc.data();
       postData.postId = doc.id;
       newData.push(postData);
-      console.log("newData", newData);
       setData(newData);
     });
   };

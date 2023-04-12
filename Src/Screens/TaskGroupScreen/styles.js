@@ -21,6 +21,9 @@ export const styles = StyleSheet.create({
     width: "35%",
     alignItems: "center",
     paddingVertical: hp(1.5),
+    // backgroundColor: "red",
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   gropuName: {
     ...commonFontStyles("bold", 20, Colors.blue),
@@ -35,5 +38,10 @@ export const styles = StyleSheet.create({
   },
   dateText: {
     ...commonFontStyles("400", 14, Colors.placeholderColor),
+  },
+  icons: {
+    height: 20,
+    width: 20,
+    resizeMode: "contain",
   },
 });

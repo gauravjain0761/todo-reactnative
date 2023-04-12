@@ -19,10 +19,7 @@ import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 
 const citydata = [
-  {
-    id: 1,
-    strategicName: "SUPERTREND",
-  },
+  { id: 1, strategicName: "SUPERTREND" },
   { id: 2, strategicName: "VWAP" },
   { id: 3, strategicName: "RSIMA" },
   { id: 6, strategicName: "TESTING" },
@@ -30,21 +27,30 @@ const citydata = [
 ];
 
 const priorityData = [
-  {
-    id: 1,
-    strategicName: "very low",
-  },
+  { id: 1, strategicName: "very low" },
   { id: 2, strategicName: "low" },
   { id: 3, strategicName: "medium" },
   { id: 6, strategicName: "high" },
   { id: 10, strategicName: "urgent" },
 ];
 
+const taskTypeData = [
+  { id: 1, strategicName: "Due Date" },
+  { id: 2, strategicName: "Recurring" },
+];
+const recurringData = [
+  { id: 1, strategicName: "daily" },
+  { id: 2, strategicName: "weekly" },
+  { id: 3, strategicName: "bi-weekly" },
+  { id: 4, strategicName: "semi-monthly" },
+  { id: 5, strategicName: "monthly" },
+  { id: 6, strategicName: "quarterly" },
+  { id: 7, strategicName: "semi-annually" },
+  { id: 8, strategicName: "annually" },
+];
+
 const categoryData = [
-  {
-    id: 1,
-    strategicName: "financial",
-  },
+  { id: 1, strategicName: "financial" },
   { id: 2, strategicName: "personal" },
   { id: 3, strategicName: "work" },
   { id: 6, strategicName: "maintenance" },
@@ -54,6 +60,8 @@ const categoryData = [
 export default function NewTaskScreen() {
   const { goBack } = useNavigation();
   const [taskName, setTaskName] = useState("");
+  const [taskType, setTaskType] = useState("");
+  const [recurringDate, setRecurringDate] = useState("");
   const [duedate, setDuedate] = useState("");
   const [priority, setPriority] = useState("");
   const [category, setCategory] = useState("");
@@ -63,8 +71,6 @@ export default function NewTaskScreen() {
     setDuedate(date);
     setPicker(false);
   };
-
-  console.log("duedate", duedate);
 
   const userCollection = firestore().collection("Users");
   const [lastDocument, setLastDocument] = useState();
@@ -87,8 +93,12 @@ export default function NewTaskScreen() {
     // console.log("duedate", duedate);
     if (isEmpty(taskName)) {
       Alert.alert("Please enter the task name");
-    } else if (duedate == "") {
-      Alert.alert("Please enter the due date");
+    } else if (taskType == "") {
+      Alert.alert("Please select task type");
+    } else if (taskType == "Due Date" && duedate == "") {
+      Alert.alert("Please select due date");
+    } else if (taskType == "Recurring" && recurringDate == "") {
+      Alert.alert("Please select recurring");
     } else if (isEmpty(priority)) {
       Alert.alert("Please enter the priority");
     } else if (isEmpty(category)) {
@@ -96,15 +106,22 @@ export default function NewTaskScreen() {
     } else if (isEmpty(taskGroup)) {
       Alert.alert("Please enter the task group");
     } else {
+      let data = {
+        taskName: taskName,
+
+        priorityLevel: priority,
+        category: category,
+        taskGroup: taskGroup,
+        taskType: taskType,
+      };
+      if (taskType == "Due Date") {
+        data.dueDate = duedate;
+      } else {
+        data.recurring = recurringDate;
+      }
       firestore()
         .collection("Users")
-        .add({
-          taskName: taskName,
-          dueDate: duedate,
-          priorityLevel: priority,
-          category: category,
-          taskGroup: taskGroup,
-        })
+        .add(data)
         .then(() => {
           Alert.alert("New List Added");
           goBack();
@@ -127,19 +144,49 @@ export default function NewTaskScreen() {
           <Text style={styles.bottomName}>TASK NAME</Text>
         </View>
         <View>
-          <TouchableOpacity
-            onPress={() => setPicker(true)}
-            style={styles.textInput}
-          >
-            <Text style={duedate ? styles.dateText : styles.placeholder}>
-              {duedate
-                ? moment(duedate).format("MM/DD/YYYY")
-                : "Enter Due Date"}
-            </Text>
-          </TouchableOpacity>
-
+          <RegistrationDropdown
+            data={taskTypeData}
+            value={taskType}
+            setData={(text) => {
+              setTaskType(text);
+            }}
+            placeholder={"Select Task Type"}
+            valueField={"strategicName"}
+          />
           <Text style={styles.bottomName}>DUE DATE / RECURRING</Text>
         </View>
+        {taskType == "Due Date" ? (
+          <View>
+            <TouchableOpacity
+              onPress={() => setPicker(true)}
+              style={styles.textInput}
+            >
+              <Text style={duedate ? styles.dateText : styles.placeholder}>
+                {duedate
+                  ? moment(duedate).format("MM/DD/YYYY")
+                  : "Enter Due Date"}
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={styles.bottomName}>DUE DATE</Text>
+          </View>
+        ) : taskType !== "" ? (
+          <View>
+            <RegistrationDropdown
+              data={recurringData}
+              value={recurringDate}
+              setData={(text) => {
+                setRecurringDate(text);
+              }}
+              placeholder={"Select Recurring"}
+              valueField={"strategicName"}
+            />
+            <Text style={styles.bottomName}>RECURRING</Text>
+          </View>
+        ) : (
+          <View></View>
+        )}
+
         <View>
           <RegistrationDropdown
             data={priorityData}
