@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Alert,
+  Image,
+  ScrollView,
 } from "react-native";
 import { isEmpty } from "lodash";
 import React, { useState } from "react";
@@ -16,14 +18,17 @@ import RegistrationDropdown from "../../Components/RegistrationDropdown";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import firestore from "@react-native-firebase/firestore";
+import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const citydata = [
   { id: 1, strategicName: "SUPERTREND" },
   { id: 2, strategicName: "VWAP" },
   { id: 3, strategicName: "RSIMA" },
-  { id: 6, strategicName: "TESTING" },
-  { id: 10, strategicName: "DEMATADE" },
+  { id: 4, strategicName: "TESTING" },
+  { id: 5, strategicName: "DEMATADE" },
 ];
 
 const priorityData = [
@@ -65,7 +70,10 @@ export default function NewTaskScreen() {
   const [duedate, setDuedate] = useState("");
   const [priority, setPriority] = useState("");
   const [category, setCategory] = useState("");
+  const [taskGroupData, setTaskGroupData] = useState([]);
+  const [taskGroupEditModal, setTaskGroupEditModal] = useState(false);
   const [taskGroup, setTaskGroup] = useState("");
+  const [taskGroupName, setTaskGroupName] = useState("");
   const [picker, setPicker] = useState(false);
   const handleConfirm = (date) => {
     setDuedate(date);
@@ -74,6 +82,21 @@ export default function NewTaskScreen() {
 
   const userCollection = firestore().collection("Users");
   const [lastDocument, setLastDocument] = useState();
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("taskGroupData");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+      return null;
+    }
+  };
+
+  useEffect(async () => {
+    let data = await getData();
+    console.log(data);
+    setTaskGroupData(data);
+  }, []);
 
   const onPressAdd = () => {
     // let query = userCollection.orderBy("taskName"); // sort the data
@@ -130,6 +153,39 @@ export default function NewTaskScreen() {
     }
   };
 
+  const toggleEditModal = () => {
+    setTaskGroupEditModal(!taskGroupEditModal);
+  };
+
+  const onPressAddTaskGroup = async () => {
+    if (taskGroupName.trim() !== "") {
+      let data = Object.assign([], taskGroupData);
+      if (data.length == 0) {
+        data.push({
+          id: 1,
+          strategicName: taskGroupName,
+        });
+      } else {
+        data.push({
+          id: data[data.length - 1].id + 1,
+          strategicName: taskGroupName,
+        });
+      }
+      setTaskGroupData(data);
+      setTaskGroupName("");
+      await AsyncStorage.setItem("taskGroupData", JSON.stringify(data));
+      console.log("--data--", data);
+    } else {
+      Alert.alert("Please enter the task group name");
+    }
+  };
+
+  const onPressDelete = async (index) => {
+    let data = Object.assign([], taskGroupData);
+    data.splice(index, 1);
+    setTaskGroupData(data);
+    await AsyncStorage.setItem("taskGroupData", JSON.stringify(data));
+  };
   return (
     <View style={ApplicationStyles.applicationView}>
       <View style={styles.mainView}>
@@ -213,7 +269,7 @@ export default function NewTaskScreen() {
         </View>
         <View>
           <RegistrationDropdown
-            data={citydata}
+            data={taskGroupData}
             value={taskGroup}
             setData={(text) => {
               setTaskGroup(text);
@@ -223,12 +279,62 @@ export default function NewTaskScreen() {
           />
           <Text style={styles.bottomName}>TASK GROUP</Text>
         </View>
+        <TouchableOpacity
+          style={{ alignSelf: "flex-end" }}
+          onPress={() => toggleEditModal()}
+        >
+          <Text style={styles.buttonTextStyle2}>{"Add/Delete Task Group"}</Text>
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity onPress={onPressAdd} style={styles.buttonStyle}>
         <Text style={styles.buttonTextStyle}> {"Add"}</Text>
       </TouchableOpacity>
       <SafeAreaView />
+      <Modal isVisible={taskGroupEditModal}>
+        <View style={styles.modalView}>
+          <Text style={styles.buttonTextStyle2}>Add/Delete Task Group</Text>
+          <View style={styles.inputView}>
+            <TextInput
+              placeholder={"Enter Task Group"}
+              placeholderTextColor={Colors.placeholderColor}
+              style={[styles.textInput, { flex: 1 }]}
+              value={taskGroupName}
+              onChangeText={(text) => setTaskGroupName(text)}
+            />
+            <TouchableOpacity onPress={() => onPressAddTaskGroup()}>
+              <Text style={styles.addButton}>Add</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {taskGroupData.length !== 0 &&
+              taskGroupData.map((item, index) => {
+                return (
+                  <View
+                    style={[
+                      styles.inputView,
+                      { justifyContent: "space-between", marginVertical: 0 },
+                    ]}
+                  >
+                    <Text>{item.strategicName}</Text>
+                    <TouchableOpacity onPress={() => onPressDelete(index)}>
+                      <Image
+                        style={styles.icons}
+                        source={require("../../Images/trash.png")}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+          </ScrollView>
+          <TouchableOpacity
+            onPress={() => toggleEditModal()}
+            style={styles.buttonStyle}
+          >
+            <Text style={styles.buttonTextStyle}> {"Save"}</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
 
       <DateTimePickerModal
         isVisible={picker}

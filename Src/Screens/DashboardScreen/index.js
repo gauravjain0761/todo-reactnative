@@ -5,13 +5,35 @@ import ApplicationStyles from "../../Themes/ApplicationStyles";
 import { useNavigation } from "@react-navigation/native";
 import LinearGradient from "react-native-linear-gradient";
 import { styles } from "./styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function DashboardScreen() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  useEffect(() => {
+  useEffect(async () => {
     dispatch({ type: "PRE_LOADER", payload: { preLoader: true } });
+    let data = await getData();
+    if (data == null) {
+      const jsonValue = JSON.stringify([
+        { id: 1, strategicName: "SUPERTREND" },
+        { id: 2, strategicName: "VWAP" },
+        { id: 3, strategicName: "RSIMA" },
+        { id: 4, strategicName: "TESTING" },
+        { id: 5, strategicName: "DEMATADE" },
+      ]);
+      await AsyncStorage.setItem("taskGroupData", jsonValue);
+    }
   }, []);
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("taskGroupData");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+      return null;
+    }
+  };
 
   return (
     <View style={ApplicationStyles.applicationView}>
