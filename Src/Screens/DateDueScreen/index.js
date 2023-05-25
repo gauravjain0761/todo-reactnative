@@ -32,6 +32,7 @@ export default function DateDueScreen() {
         ) !== moment().format("DD-MM-YYYY")
     );
     setData(sortingData);
+    console.log(sortingData);
   };
 
   async function onLoadData(count) {
@@ -88,17 +89,24 @@ export default function DateDueScreen() {
           data={data}
           renderItem={({ item, index }) => {
             let data = item._data;
+            console.log(moment());
             return (
               <View key={index} style={styles.row}>
                 <View style={styles.leftView}>
                   <Text style={styles.taskText}>{data?.taskName}</Text>
                 </View>
                 <View style={styles.rightView}>
-                  <Text style={styles.dateText}>
-                    {moment(timeStampToDate(data?.dueDate?.seconds)).format(
-                      "DD-MM-YYYY"
-                    )}
-                  </Text>
+                  {data?.taskType == "Recurring" ? (
+                    <Text style={[styles.dateText, { textAlign: "center" }]}>
+                      {data?.currentDate + "\n(" + data?.recurring + ")"}
+                    </Text>
+                  ) : (
+                    <Text style={styles.dateText}>
+                      {moment(timeStampToDate(data?.dueDate?.seconds)).format(
+                        "DD-MM-YYYY"
+                      )}
+                    </Text>
+                  )}
                 </View>
               </View>
             );

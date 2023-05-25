@@ -141,6 +141,7 @@ export default function NewTaskScreen() {
         data.dueDate = duedate;
       } else {
         data.recurring = recurringDate;
+        data.currentDate = moment().format("DD-MM-YYYY");
       }
       firestore()
         .collection("Users")
