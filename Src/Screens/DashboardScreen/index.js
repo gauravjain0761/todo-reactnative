@@ -117,6 +117,20 @@ export default function DashboardScreen() {
             <Text style={styles.rowText}>ALL TASKS</Text>
           </View>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ArchivedScreen")}
+          style={styles.buttonRow}
+        >
+          <View>
+            <LinearGradient
+              colors={["#192f6a", "#4c669f"]}
+              style={styles.linearGradient}
+            ></LinearGradient>
+          </View>
+          <View>
+            <Text style={styles.rowText}>ARCHIVED</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -5,6 +5,7 @@ import { styles } from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { dummyData } from "../../Config/Constatnts";
 import firestore from "@react-native-firebase/firestore";
+import Toast from "react-native-toast-message";
 
 export default function AllTaskScreen() {
   const [dummyDataSet, setdummyDataSet] = useState(dummyData);
@@ -25,9 +26,12 @@ export default function AllTaskScreen() {
         isChecked: !item.data.isChecked,
       })
       .then(() => {
+        Toast.show({
+          text1: "Archived Successfully",
+          type: "success",
+        });
         console.log("User updated!");
       });
-
     item.data.isChecked = !item.data.isChecked;
     setData([...allData]);
   };
@@ -48,8 +52,32 @@ export default function AllTaskScreen() {
       });
   };
 
+  const toastConfig = {
+    success: ({ text1, text2, type, props, ...rest }) =>
+      type === "success" && (
+        <View style={styles.textStyleToastSuccess}>
+          <Text style={styles.textStyleToast}>{text1}</Text>
+          {/* <Text style={styles.textStyleToast}>{text2}</Text> */}
+        </View>
+      ),
+    error: ({ text1, text2, type, props, ...rest }) =>
+      type === "error" && (
+        <View style={styles.toastStyle}>
+          <Text style={styles.textStyleToast}>{text1}</Text>
+          {/* <Text style={styles.textStyleToast}>{text2}</Text> */}
+        </View>
+      ),
+    // info: () => {},
+    // any_custom_type: () => {},
+  };
+
   return (
     <View style={ApplicationStyles.applicationView}>
+      <Toast
+        position={"bottom"}
+        config={toastConfig}
+        ref={(ref) => Toast.setRef(ref)}
+      />
       <View style={styles.mainView}>
         <View style={styles.row}>
           <View style={styles.leftView}>
@@ -72,26 +100,28 @@ export default function AllTaskScreen() {
         <FlatList
           data={allData}
           renderItem={({ item, index }) => {
-            return (
-              <View key={index} style={styles.row}>
-                <View style={styles.leftView}>
-                  <Text style={styles.taskText}>{item.data.taskName}</Text>
+            if (!item.data.isChecked) {
+              return (
+                <View key={index} style={styles.row}>
+                  <View style={styles.leftView}>
+                    <Text style={styles.taskText}>{item.data.taskName}</Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => updateData(item, index)}
+                    style={styles.rightView}
+                  >
+                    <Image
+                      style={styles.checkBox}
+                      source={
+                        item.data.isChecked
+                          ? require("../../Images/checkbox.png")
+                          : require("../../Images/unchecked.png")
+                      }
+                    />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                  onPress={() => updateData(item, index)}
-                  style={styles.rightView}
-                >
-                  <Image
-                    style={styles.checkBox}
-                    source={
-                      item.data.isChecked
-                        ? require("../../Images/checkbox.png")
-                        : require("../../Images/unchecked.png")
-                    }
-                  />
-                </TouchableOpacity>
-              </View>
-            );
+              );
+            }
           }}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id}

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Colors from "../../Themes/Colors";
 import { commonFontStyles } from "../../Themes/Fonts";
@@ -46,4 +46,24 @@ export const styles = StyleSheet.create({
     width: 40,
   },
   completedText: { ...commonFontStyles("500", 18, Colors.white) },
+
+  toastStyle: {
+    backgroundColor: "white",
+    paddingVertical: hp(1.8),
+    width: Dimensions.get("window").width - hp(8),
+    borderRadius: 5,
+    borderLeftWidth: 6,
+    borderLeftColor: "red",
+  },
+  textStyleToastSuccess: {
+    backgroundColor: "black",
+    paddingVertical: hp(1),
+    borderRadius: 5,
+
+    marginBottom: 40,
+  },
+  textStyleToast: {
+    ...commonFontStyles("500", 14, Colors.white),
+    marginHorizontal: hp(2),
+  },
 });

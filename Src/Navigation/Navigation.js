@@ -22,6 +22,7 @@ import AboutUsScreen from "../Screens/AboutUsScreen";
 import TermsScreen from "../Screens/TermsScreen/index";
 import PrivacyScreen from "../Screens/PrivacyScreen";
 import AllTaskGroupListScreen from "../Screens/AllTaskGroupListScreen";
+import ArchivedScreen from "../Screens/ArchivedScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -186,6 +187,15 @@ export default function Navigation() {
           })}
           name="AllTaskScreen"
           component={AllTaskScreen}
+        />
+        <Stack.Screen
+          options={({ navigation }) => ({
+            title: "ARCHIVED",
+            ...data,
+            headerLeft: () => <HeaderLeft navigation={navigation} />,
+          })}
+          name="ArchivedScreen"
+          component={ArchivedScreen}
         />
         <Stack.Screen
           options={({ navigation }) => ({
